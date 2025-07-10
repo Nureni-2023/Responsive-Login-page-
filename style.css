@@ -1,0 +1,150 @@
+/* style.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5; /* Light grey background */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+/* Custom scrollbar for a cleaner look */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/* General interactive element styling with transitions */
+.interactive-item {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.interactive-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.interactive-button {
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+.interactive-button:active {
+    transform: scale(0.98);
+}
+
+/* Toast Notification Styling */
+#toast-notification {
+    visibility: hidden; /* Hidden by default */
+    min-width: 250px; /* Set a default minimum width */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 8px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1000; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+    transform: translateX(-50%); /* Center horizontally */
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+#toast-notification.show {
+    visibility: visible; /* Show the snackbar */
+    opacity: 1; /* Fade in */
+}
+
+/* Page specific styles */
+.page {
+    display: none; /* All pages are hidden by default */
+}
+.page.active {
+    display: block; /* Active page is displayed */
+}
+
+/* Custom Card Styles for the Virtual Card */
+.virtual-card {
+    background: linear-gradient(135deg, #28a745, #218838); /* Green gradient */
+    position: relative;
+    overflow: hidden;
+    background-image: url('https://placehold.co/400x200/28a745/218838?text=OPay+Virtual+Card+Design'); /* Placeholder for card design */
+    background-size: cover;
+    background-position: center;
+}
+.virtual-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 90%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    transform: rotate(45deg);
+}
+.virtual-card .opay-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 0.05em;
+}
+.virtual-card .verve-logo {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 60px; /* Adjust as needed */
+    height: auto;
+}
+
+/* Physical Card Specific Styling */
+.physical-card-image {
+    background-image: url('https://placehold.co/400x250/28a745/FFFFFF?text=OPay+Physical+Card'); /* Placeholder for physical card design */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+.physical-card-image .opay-logo-small {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 0.05em;
+}
+.physical-card-image .verve-debit-logo {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 80px; /* Adjust as needed */
+    height: auto;
+}
+.physical-card-image .chip-icon {
+    font-size: 2.5rem;
+    color: #f0c040; /* Gold-like color for chip */
+}
+.physical-card-image .wave-pattern {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; /* Adjust as needed */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,170.7C672,149,768,139,864,154.7C960,171,1056,213,1152,218.7C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat center bottom;
+    background-size: cover;
+    opacity: 0.8;
+    z-index: 0;
+}
+.physical-card-image .bridge-pattern {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,170.7C672,149,768,139,864,154.7C960,171,1056,213,1152,218.7C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat center bottom;
+    background-size: cover;
+    opacity: 0.1;
+    z-index: 0;
+}

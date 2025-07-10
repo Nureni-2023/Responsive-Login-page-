@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opay Clone UI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Toast Notification -->
+    <div id="toast-notification"></div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="page active flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+            <img src="https://placehold.co/100x100/28a745/ffffff?text=OPay" alt="OPay Logo" class="mx-auto mb-6">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Welcome Back!</h2>
+            <div class="mb-4">
+                <input type="email" id="loginEmail" placeholder="Email" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800">
+            </div>
+            <div class="mb-6">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800">
+            </div>
+            <button id="signInBtn" class="w-full bg-green-500 text-white py-3 rounded-full font-bold text-lg hover:bg-green-600 interactive-button shadow-lg mb-4">
+                Sign In
+            </button>
+            <p class="text-sm text-gray-600">Don't have an account? <a href="#" id="showRegister" class="text-green-600 font-semibold hover:underline">Register here</a></p>
+            <div id="loginError" class="text-red-500 text-sm mt-4 hidden"></div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="page flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+            <img src="https://placehold.co/100x100/28a745/ffffff?text=OPay" alt="OPay Logo" class="mx-auto mb-6">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Create Account</h2>
+            <div class="mb-4">
+                <input type="email" id="registerEmail" placeholder="Email" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800">
+            </div>
+            <div class="mb-6">
+                <input type="password" id="registerPassword" placeholder="Password" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800">
+            </div>
+            <button id="signUpBtn" class="w-full bg-green-500 text-white py-3 rounded-full font-bold text-lg hover:bg-green-600 interactive-button shadow-lg mb-4">
+                Sign Up
+            </button>
+            <p class="text-sm text-gray-600">Already have an account? <a href="#" id="showLogin" class="text-green-600 font-semibold hover:underline">Login here</a></p>
+            <div id="registerError" class="text-red-500 text-sm mt-4 hidden"></div>
+        </div>
+    </div>
+
+    <!-- Main App Content (Initially Hidden) -->
+    <div id="appContent" class="hidden flex-grow flex flex-col">
+        <!-- Home Page Content -->
+        <div id="homePage" class="page flex-grow p-4 pb-20 overflow-y-auto">
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-3">
+                    <img src="https://placehold.co/48x48/007bff/ffffff?text=User" alt="Profile Picture" class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-lg">
+                    <span class="text-xl font-bold text-gray-800">Hi, NURENI</span>
+                </div>
+                <div class="flex items-center gap-5 text-gray-600">
+                    <div class="relative p-2 rounded-full hover:bg-gray-200 cursor-pointer transition-colors duration-200" onclick="showToast('Help button clicked!')">
+                        <i class="fas fa-headset text-2xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">HELP</span>
+                    </div>
+                    <div class="p-2 rounded-full hover:bg-gray-200 cursor-pointer transition-colors duration-200" onclick="showToast('QR Code button clicked!')">
+                        <i class="fas fa-qrcode text-2xl"></i>
+                    </div>
+                    <div class="relative p-2 rounded-full hover:bg-gray-200 cursor-pointer transition-colors duration-200" onclick="showToast('Notifications button clicked!')">
+                        <i class="fas fa-bell text-2xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">12</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Balance Card -->
+            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-5 mb-6 shadow-xl flex justify-between items-center interactive-item" onclick="showToast('Available Balance clicked!')">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-check-circle text-xl"></i>
+                        <span class="font-medium text-lg">Available Balance</span>
+                        <i class="fas fa-eye-slash text-xl ml-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity" onclick="event.stopPropagation(); showToast('Toggle balance visibility!')"></i>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-4xl font-extrabold tracking-wide">****</span>
+                        <i class="fas fa-chevron-right text-xl opacity-80"></i>
+                    </div>
+                </div>
+                <button class="bg-white text-green-600 px-5 py-2.5 rounded-full font-bold text-base shadow-md hover:bg-gray-100 interactive-button" onclick="event.stopPropagation(); showToast('Add Money button clicked!')">
+                    <i class="fas fa-plus mr-2"></i> Add Money
+                </button>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="flex justify-end mb-6">
+                <button class="text-green-600 font-semibold text-base flex items-center gap-2 hover:text-green-700 interactive-button" onclick="showToast('Transaction History clicked!')">
+                    Transaction History <i class="fas fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+
+            <!-- Quick Access Grid -->
+            <div class="grid grid-cols-3 gap-4 mb-6 text-center">
+                <div class="bg-white p-5 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('To OPay clicked!')">
+                    <div class="bg-green-100 text-green-600 p-4 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-wallet text-3xl"></i>
+                    </div>
+                    <span class="text-base font-medium text-gray-800">To OPay</span>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('To Bank clicked!')">
+                    <div class="bg-green-100 text-green-600 p-4 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-bank text-3xl"></i>
+                    </div>
+                    <span class="text-base font-medium text-gray-800">To Bank</span>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Withdraw clicked!')">
+                    <div class="bg-green-100 text-green-600 p-4 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-arrow-right-from-bracket text-3xl"></i>
+                    </div>
+                    <span class="text-base font-medium text-gray-800">Withdraw</span>
+                </div>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="grid grid-cols-4 gap-4 mb-6 text-center">
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Airtime clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-signal text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Airtime</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Data clicked!')">
+                    <div class="relative bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-arrow-up text-2xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">6%</span>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Data</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Betting clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-trophy text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Betting</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('TV clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-tv text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">TV</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Safebox clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-lock text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Safebox</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Loan clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-hand-holding-dollar text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Loan</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Invitation clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-user-plus text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Invitation</span>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('More clicked!')">
+                    <div class="bg-green-100 text-green-600 p-3.5 rounded-full mb-2 shadow-sm">
+                        <i class="fas fa-ellipsis-h text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">More</span>
+                </div>
+            </div>
+
+            <!-- Promotion Card -->
+            <div class="bg-white rounded-2xl p-5 shadow-md flex items-center gap-4 interactive-item" onclick="showToast('Promotion card clicked!')">
+                <div class="bg-green-100 text-green-600 p-4 rounded-full shadow-sm">
+                    <i class="fas fa-sack-dollar text-3xl"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-lg text-gray-800">Cash up for grabs!</p>
+                    <p class="text-sm text-gray-600">Invite friends and earn up to <span class="font-semibold">&#x20A6;5,600</span> Bonus</p>
+                </div>
+            </div>
+
+            <!-- Floating Action Button (FAB) -->
+            <button class="fixed bottom-24 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg cursor-pointer hover:bg-green-600 interactive-button z-40" onclick="showToast('Click for more button clicked!')">
+                <i class="fas fa-chevron-right text-2xl"></i>
+                <span class="sr-only">Click for more</span>
+            </button>
+        </div>
+
+        <!-- Rewards Page Content -->
+        <div id="rewardsPage" class="page flex-grow p-4 pb-20 overflow-y-auto">
+            <!-- Rewards Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Rewards</h1>
+                <button class="p-2 rounded-full hover:bg-gray-200 cursor-pointer transition-colors duration-200" onclick="showToast('More options for Rewards clicked!')">
+                    <i class="fas fa-ellipsis-h text-xl text-gray-600"></i>
+                </button>
+            </div>
+
+            <!-- Cashback & Voucher Summary -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-white rounded-xl p-4 shadow-md flex flex-col interactive-item" onclick="showToast('Cashback summary clicked!')">
+                    <div class="flex items-center mb-2">
+                        <span class="text-gray-600 text-sm mr-1">Cashback</span>
+                        <i class="fas fa-question-circle text-gray-400 text-xs"></i>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-green-500 text-2xl font-bold mr-1">&#x20A6;</span>
+                        <span class="text-green-500 text-2xl font-bold">92.80</span>
+                        <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-md flex flex-col interactive-item" onclick="showToast('Voucher summary clicked!')">
+                    <div class="flex items-center mb-2">
+                        <span class="text-gray-600 text-sm mr-1">Voucher</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-800 text-2xl font-bold mr-1">&#x20A6;</span>
+                        <span class="text-gray-800 text-2xl font-bold">0</span>
+                        <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reward Categories Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+                <div class="bg-white p-4 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Friday Bonus clicked!')">
+                    <img src="https://placehold.co/60x60/d4edda/28a745?text=Bonus" alt="Friday Bonus" class="w-16 h-16 mb-2">
+                    <span class="text-sm font-medium text-gray-700">Friday Bonus</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Refer Friends clicked!')">
+                    <img src="https://placehold.co/60x60/ffeeba/ffc107?text=Refer" alt="Refer Friends" class="w-16 h-16 mb-2">
+                    <span class="text-sm font-medium text-gray-700">Refer Friends</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Spin & Win clicked!')">
+                    <img src="https://placehold.co/60x60/e0f7fa/00bcd4?text=Spin" alt="Spin & Win" class="w-16 h-16 mb-2">
+                    <span class="text-sm font-medium text-gray-700">Spin & Win</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer interactive-item" onclick="showToast('Play4Child clicked!')">
+                    <img src="https://placehold.co/60x60/f8d7da/dc3545?text=Play" alt="Play4Child" class="w-16 h-16 mb-2">
+                    <span class="text-sm font-medium text-gray-700">Play4Child</span>
+                </div>
+            </div>
+
+            <!-- Hot Vouchers Section -->
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-lg font-semibold text-gray-800">Hot Vouchers</span>
+                    <span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">HOT</span>
+                </div>
+
+                <!-- Betting Voucher Card -->
+                <div class="bg-white rounded-2xl p-5 shadow-md interactive-item cursor-pointer" onclick="showToast('Betting Voucher clicked!')">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold mr-2">Hot</span>
+                        <span class="text-gray-800 font-semibold">Betting</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="text-green-500 text-3xl font-bold mr-1">&#x20A6;</span>
+                        <span class="text-green-500 text-3xl font-bold">100</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Bet9ja Voucher</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                        <div class="bg-green-500 h-2.5 rounded-full" style="width: 12%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 text-right mb-4">12%</p>
+                    <button class="w-full bg-green-500 text-white py-3 rounded-full font-bold text-lg hover:bg-green-600 interactive-button" onclick="event.stopPropagation(); showToast('Get Bet9ja Voucher clicked!')">
+                        Get
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-center mb-6">
+                <button class="text-green-600 font-semibold text-base flex items-center gap-2 hover:text-green-700 interactive-button" onclick="showToast('View My Voucher clicked!')">
+                    View My Voucher <i class="fas fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+
+            <!-- Daily Bonus Section -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Daily Bonus</h2>
+                <div class="space-y-4">
+                    <!-- Activate Biz Account -->
+                    <div class="bg-white rounded-xl p-4 shadow-md flex items-center justify-between interactive-item cursor-pointer" onclick="showToast('Activate Biz Account clicked!')">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-100 text-green-600 p-3 rounded-full shadow-sm">
+                                <i class="fas fa-wallet text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Activate Biz Account</p>
+                                <p class="text-sm text-gray-600">Activate Your Biz Account to earn <span class="font-bold">&#x20A6;200</span> Cashback</p>
+                            </div>
+                        </div>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-full font-bold text-sm hover:bg-green-600 interactive-button" onclick="event.stopPropagation(); showToast('Go to Activate Biz Account!')">
+                            Go
+                        </button>
+                    </div>
+
+                    <!-- Glo Airtime -->
+                    <div class="bg-white rounded-xl p-4 shadow-md flex items-center justify-between interactive-item cursor-pointer" onclick="showToast('Glo Airtime clicked!')">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-100 text-green-600 p-3 rounded-full shadow-sm">
+                                <i class="fas fa-mobile-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Glo Airtime</p>
+                                <p class="text-sm text-gray-600">Buy Airtime and get up to <span class="font-bold">6%</span> Cashback</p>
+                            </div>
+                        </div>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-full font-bold text-sm hover:bg-green-600 interactive-button" onclick="event.stopPropagation(); showToast('Go to Glo Airtime!')">
+                            Go
+                        </button>
+                    </div>
+
+                    <!-- 9 Mobile Airtime -->
+                    <div class="bg-white rounded-xl p-4 shadow-md flex items-center justify-between interactive-item cursor-pointer" onclick="showToast('9 Mobile Airtime clicked!')">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-100 text-green-600 p-3 rounded-full shadow-sm">
+                                <i class="fas fa-mobile-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">9 Mobile Airtime</p>
+                                <p class="text-sm text-gray-600">Buy Airtime and get up to <span class="font-bold">5%</span> Cashback</p>
+                            </div>
+                        </div>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-full font-bold text-sm hover:bg-green-600 interactive-button" onclick="event.stopPropagation(); showToast('Go to 9 Mobile Airtime!')">
+                            Go
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-6">
+                <button class="text-green-600 font-semibold text-base flex items-center gap-2 hover:text-green-700 interactive-button" onclick="showToast('View All Daily Bonus clicked!')">
+                    View All <i class="fas fa-chevron-down ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Finance Page Content -->
+        <div id="financePage" class="page flex-grow p-4 pb-20 overflow-y-auto">
+            <!-- Finance Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Finance</h1>
+                <button class="p-2 rounded-full hover:bg-gray-200 cursor-pointer transition-colors duration-200" onclick="showToast('Finance settings clicked!')">
+                    <i class="fas fa-cog text-xl text-gray-600"></i>
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mb-4">from BlueRidge Microfinance Bank</p>
+
+            <!-- Savings/Loan/New Tabs -->
+            <div class="flex bg-white rounded-full p-1 mb-6 shadow-sm">
+                <button class="flex-1 text-center py-2 rounded-full text-green-600 font-semibold bg-green-50" onclick="showToast('Savings tab clicked!')">Savings</button>
+                <button class="flex-1 text-center py-2 rounded-full text-gray-600 font-semibold hover:bg-gray-100" onclick="showToast('Loan tab clicked!')">Loan</button>
+                <button class="flex-1 text-center py-2 rounded-full text-gray-600 font-semibold hover:bg-gray-100 relative" onclick="showToast('New tab clicked!')">
+                    New
+                    <span class="absolute -top-1 right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">New</span>
+                </button>
+            </div>
+
+            <!-- Total Balance & Interest -->
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <div class="flex items-center text-gray-600 text-sm mb-1">
+                        Total Balance <i class="fas fa-eye ml-1 text-gray-400 cursor-pointer" onclick="showToast('Toggle total balance visibility!')"></i>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-green-600 text-3xl font-bold mr-1">&#x20A6;</span>
+                        <span class="text-green-600 text-3xl font-bold">1,196.08</span>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-gray-600 text-sm mb-1">Total Interest</div>
+                    <div class="flex items-baseline justify-end">
+                        <span class="text-green-600 text-xl font-bold mr-1">&#x20A6;</span>
+                        <span class="text-green-600 text-xl font-bold">16.71</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OWealth Card -->
+            <div class="bg-white rounded-2xl p-5 mb-6 shadow-md interactive-item cursor-pointer" onclick="showToast('OWealth card clicked!')">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-full shadow-sm">
+                        <i class="fas fa-wallet text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800">OWealth</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-4">Your daily returns. You can withdraw at any time.</p>
+                <div class="flex items-baseline">
+                    <span class="text-gray-800 text-2xl font-bold mr-1">&#x20A6;</span>
+                    <span class="text-gray-800 text-2xl font-bold">1,196.08</span>
+                </div>
+            </div>
+
+            <!-- Targets & SafeBox Grid -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-white rounded-2xl p-5 shadow-md flex flex-col interactive-item cursor-pointer" onclick="showToast('Targets card clicked!')">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-bullseye text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Targets</h3>
+                    <p class="text-sm text-gray-600">Save daily, weekly, or monthly towards your goal.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-md flex flex-col interactive-item cursor-pointer" onclick="showToast('SafeBox card clicked!')">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-box text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">SafeBox</h3>
+                    <p class="text-sm text-gray-600">Your daily, weekly or monthly automatic savings.</p>
+                </div>
+            </div>
+
+            <!-- Fixed & Spend & Save Grid -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-white rounded-2xl p-5 shadow-md flex flex-col interactive-item cursor-pointer" onclick="showToast('Fixed card clicked!')">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-lock text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Fixed</h3>
+                    <p class="text-sm text-gray-600 mb-4">Plans:0</p>
+                    <div class="flex items-baseline">
+                        <span class="text-gray-800 text-2xl font-bold mr-1">&#x20A6;</span>
+                        <span class="text-gray-800 text-2xl font-bold">0.00</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-md flex flex-col interactive-item cursor-pointer" onclick="showToast('Spend & Save card clicked!')">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-full mb-3 shadow-sm">
+                        <i class="fas fa-piggy-bank text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Spend & Save</h3>
+                    <p class="text-sm text-gray-600">Your percentage savings every time you spend or transfer.</p>
+                </div>
+            </div>
+
+            <!-- Savings Report Card -->
+            <div class="bg-white rounded-2xl p-5 shadow-md flex items-center gap-4 interactive-item cursor-pointer" onclick="showToast('Savings Report clicked!')">
+                <div class="bg-purple-100 text-purple-600 p-3 rounded-full shadow-sm">
+                    <i class="fas fa-chart-pie text-xl"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-lg text-gray-800">Savings Report</p>
+                    <p class="text-sm text-gray-600">Check out your savings journey so far</p>
+                </div>
+            </div>
+
+            <!-- LLM-powered Spending Analysis Section -->
+            <div class="mt-8 bg-white rounded-2xl p-5 shadow-md">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    ✨ Smart Spending Analysis
+                </h2>
+                <p class="text-sm text-gray-600 mb-4">
+                    Describe your recent spending habits or transactions, and I'll help you analyze them!
+                </p>
+                <textarea id="spendingInput" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4 text-gray-800" rows="4" placeholder="e.g., 'I spent a lot on groceries this month, bought new clothes, and paid for a subscription service.'"></textarea>
+                <button id="analyzeSpendingBtn" class="w-full bg-green-500 text-white py-3 rounded-full font-bold text-lg hover:bg-green-600 interactive-button shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-magic"></i> Analyze Spending
+                </button>
+                <div id="analysisResult" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 hidden">
+                    <p class="font-semibold mb-2">Analysis:</p>
+                    <div id="analysisText" class="whitespace-pre-wrap"></div>
+                </div>
+                <div id="analysisLoading" class="mt-4 text-center hidden">
+                    <i class="fas fa-spinner fa-spin text-green-600 text-2xl"></i>
+                    <p class="text-gray-600 mt-2">Analyzing your spending...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar (Hidden on Auth Pages) -->
+        <nav id="bottomNav" class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-lg z-50 hidden">
+            <div class="flex justify-around items-center h-16">
+                <a href="#" class="nav-item flex flex-col items-center text-gray-500 hover:text-green-600 transition-colors duration-200" data-page="homePage">
+                    <i class="fas fa-home text-2xl mb-1"></i>
+                    <span class="text-xs">Home</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center text-gray-500 hover:text-green-600 transition-colors duration-200" data-page="rewardsPage">
+                    <i class="fas fa-gift text-2xl mb-1"></i>
+                    <span class="text-xs">Rewards</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center text-gray-500 hover:text-green-600 transition-colors duration-200" data-page="financePage">
+                    <i class="fas fa-chart-line text-2xl mb-1"></i>
+                    <span class="text-xs">Finance</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center text-gray-500 hover:text-green-600 transition-colors duration-200" data-page="cardsPage">
+                    <i class="fas fa-credit-card text-2xl mb-1"></i>
+                    <span class="text-xs">Cards</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center text-gray-500 hover:text-green-600 transition-colors duration-200" data-page="mePage">
+                    <i class="fas fa-user text-2xl mb-1"></i>
+                    <span class="text-xs">Me</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
